@@ -22,7 +22,7 @@
     </toc-element>
 
     <toc-element toc-title="Kotlin overview">
-        <toc-element id="multiplatform.md"/>
+        <toc-element id="multiplatform.xml"/>
         <toc-element id="server-overview.md" accepts-web-file-names="httpservlets.html"/>
         <toc-element id="android-overview.md"/>
         <toc-element id="wasm-overview.md"/>
@@ -132,7 +132,7 @@
     </toc-element>
 
     <toc-element toc-title="Multiplatform development">
-        <toc-element id="multiplatform-get-started.md" accepts-web-file-names="building-mpp-with-gradle.html,intro-to-kotlin-mpp.html,mpp-intro.html,mpp-get-started.html,multiplatform-tutorials.html" toc-title="Introduction"/>
+        <toc-element id="multiplatform.xml" accepts-web-file-names="building-mpp-with-gradle.html,intro-to-kotlin-mpp.html,mpp-intro.html,mpp-get-started.html,multiplatform-tutorials.html,multiplatform.html" toc-title="Introduction"/>
         <toc-element id="multiplatform-discover-project.md" accepts-web-file-names="mpp-discover-project.html" toc-title="Understand basic project structure"/>
         <toc-element id="multiplatform-advanced-project-structure.md" toc-title="Explore advanced project structure"/>
         <toc-element id="multiplatform-set-up-targets.md" toc-title="Set up targets" accepts-web-file-names="mpp-set-up-targets.html"/>
