@@ -5,91 +5,99 @@ same code for [different platforms](multiplatform-dsl-reference.md#targets) whil
 
 ![Kotlin Multiplatform](kotlin-multiplatform.svg){width=700}
 
-## Code sharing between platforms
+## Learn key concepts
 
-Kotlin Multiplatform allows you to maintain a single codebase of the application logic for [different platforms](multiplatform-dsl-reference.md#targets).
-You also get advantages of native programming, including great performance and full access to platform SDKs.
+Kotlin Multiplatform allows you to share code across different platforms, whether it’s mobile, web, or desktop.
+The platforms to which the code is compiled, are defined by the list of _targets_.
 
-Kotlin provides the following code sharing mechanisms:
+Each target has a corresponding *source set*, which represents a set of source files with its own dependencies and
+compiler options. Platform-specific source sets, for example `jvmMain` for the JVM, can make use of platform-specific
+libraries and APIs.
 
-* Share common code among [all platforms](multiplatform-share-on-platforms.md#share-code-on-all-platforms) used in your project.
-* Share code among [some platforms](multiplatform-share-on-platforms.md#share-code-on-similar-platforms) included in your project to reuse much of the code in similar platforms:
+To share code among a subset of targets, intermediate source sets are used. For example, the `appleMain` source set
+represents the code shared among all Apple platforms. The code shared among all platforms and compiled to all declared
+targets has its own source set, `commonMain`. It cannot use platform-specific APIs, but can take advantage of
+multiplatform libraries.
 
-![Code shared across different platforms](kotlin-multiplatform-hierarchical-structure.svg){width=700}
+When compiling for a specific target, Kotlin combines the common source set, the relevant intermediate source sets,
+and the target-specific source set.
 
-* If you need to access platform-specific APIs from the shared code, use the Kotlin mechanism of [expected and actual declarations](multiplatform-expect-actual.md).
-* Explore [sharing code principles and examples](multiplatform-share-on-platforms.md) if you want to create applications or libraries targeting other platforms
+For more details on this topic, see:
 
-Once you have gained some experience with Kotlin Multiplatform and want to know how to solve particular cross-platform development tasks:
+* [The basics of Kotlin Multiplatform project structure](multiplatform-discover-project.md)
+* [Set up targets manually](multiplatform-set-up-targets.md)
+* [Advanced concepts of the multiplatform project structure](multiplatform-advanced-project-structure.md)
 
-* [Share code on platforms](multiplatform-share-on-platforms.md) in your Kotlin Multiplatform project.
-* [Set up targets manually](multiplatform-set-up-targets.md) for your Kotlin Multiplatform project.
-* [Add dependencies](multiplatform-add-dependencies.md) on the standard, test, or another kotlinx library.
-* [Configure compilations](multiplatform-configure-compilations.md) for production and test purposes in your project.
-* [Publish a multiplatform library](multiplatform-publish-lib.md) to the Maven repository.
-* [Build native binaries](multiplatform-build-native-binaries.md) as executables or shared libraries, like universal frameworks or XCFrameworks.
+## Use code sharing mechanisms
 
-### Android and iOS applications
+It's not always possible or convenient to share code among all platforms. For a more granular approach, use intermediate
+source sets to share code for specific subsets of targets. Kotlin Multiplatform provides a way to simplify their creation
+with a default hierarchy template. It includes a pre-defined list of intermediate source sets that are created based on
+the targets you specified in your project.
 
-Sharing code between mobile platforms is a major [Kotlin Multiplatform](https://www.jetbrains.com/kotlin-multiplatform/) use case. With Kotlin Multiplatform,
-you can build cross-platform mobile applications that share code between Android and iOS projects to implement networking,
-data storage and data validation, analytics, computations, and other application logic.
+Platform-specific APIs cannot usually be accessed from shared code. However, you can work around this by using Kotlin's
+mechanism of expected and actual declarations. This way you can declare that you `expect` a platform-specific API in
+common code but provide a separate `actual` implementation for each target platform. You can use this mechanism with
+different Kotlin concepts, including functions, classes, and interfaces. For example, you can define a function in
+common code, but provide its implementation using a platform-specific library in a corresponding source set.
 
-Check out the [Get started with Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html) and
-[Create a multiplatform app using Ktor and SQLDelight](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-ktor-sqldelight.html) tutorials,
-where you will create applications for Android and iOS that include a module with shared code for both platforms.
+For more details on this topic, see:
 
-Thanks to [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/),
-a Kotlin-based declarative UI framework developed by JetBrains,
-you can also share UIs across Android and iOS to create fully cross-platform apps:
+* [Share code on platforms](multiplatform-share-on-platforms.md)
+* [Expected and actual declarations](multiplatform-expect-actual.md)
+* [Hierarchical project structure](multiplatform-hierarchy.md)
 
-![Sharing different levels and UI](multiplatform-compose.svg){width=600}
+## Add dependencies
 
-Check out the [Create a Compose Multiplatform app](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-create-first-app.html)
-tutorial to create your own mobile application with UIs shared between both platforms.
+A Kotlin Multiplatform project can depend on external libraries and other multiplatform projects. For common code,
+you can add dependencies on multiplatform libraries in the common source set. Kotlin automatically resolves and adds the
+appropriate platform-specific parts to other source sets. If only platform-specific API is required, add the dependency
+to the corresponding source sets.
 
-### Multiplatform libraries
+Adding Android-specific dependencies to a Kotlin Multiplatform project is easy and similar to adding them in a pure Android
+project. When working with iOS-specific dependencies, you can seamlessly integrate Apple SDK frameworks without extra
+configuration. For external libraries and frameworks, Kotlin offers interoperability with Objective-C and Swift.
 
-Kotlin Multiplatform is also helpful for library authors. You can create a multiplatform library with common code and its
-platform-specific implementations for JVM, web, and native platforms. Once published, a multiplatform library can be used
+For more details on this topic, see:
+
+* [Add dependencies on multiplatform libraries](multiplatform-add-dependencies.md)
+* [Add dependencies on Android libraries](multiplatform-android-dependencies.md)
+* [Add dependencies on iOS libraries](multiplatform-ios-dependencies.md)
+
+## Configure compilations
+
+Every target can have multiple compilations for different purposes, typically for production or testing, but you can also
+define custom compilations.
+
+With Kotlin Multiplatform, you can configure all compilations in the project, set up specific compilations within a
+target, and even create individual compilations. When configuring compilations, you can modify compiler options, manage
+dependencies, or configure interoperability with native languages.
+
+For more details on this topic, see [Configure compilations](multiplatform-configure-compilations.md).
+
+## Build final binaries
+
+By default, a target is compiled to a `.klib` artifact, which can be consumed by Kotlin/Native itself as a dependency
+but cannot be executed or used as a native library. However, Kotlin Multiplatform provides additional mechanisms
+for building final native binaries.
+
+You can create executable binaries, shared and static libraries, or Objective-C frameworks, each configurable for different
+build types. Kotlin also provides a way to build universal (fat) frameworks and XCFrameworks for iOS integration.
+
+For more details on this topic, see [Build native binaries](multiplatform-build-native-binaries.md).
+
+## Multiplatform libraries
+
+You can create a multiplatform library with common code and its platform-specific implementations for JVM, web, and
+native platforms.
+
+Publishing a Kotlin Multiplatform library involves specific configurations in your Gradle build script. You can use a
+Maven repository and the `maven-publish` plugin for publication. Once published, a multiplatform library can be used
 as a dependency in other cross-platform projects.
 
-See the [Publish a multiplatform library](multiplatform-publish-lib.md) for more details.
+For more details on this topic, see [Publish a multiplatform library](multiplatform-publish-lib.md).
 
-### Desktop applications
+## What's next
 
-Compose Multiplatform helps share UIs across desktop platforms like Windows, macOS, and Linux. Many applications,
-including the [JetBrains Toolbox app](https://blog.jetbrains.com/kotlin/2021/12/compose-multiplatform-toolbox-case-study/),
-have already adopted this approach.
-
-Try this [Compose Multiplatform desktop application](https://github.com/JetBrains/compose-multiplatform-desktop-template#readme)
-template to create your own project with UIs shared among desktop platforms.
-
-## Code sharing between platforms
-
-Kotlin Multiplatform allows you to maintain a single codebase of the application logic for [different platforms](multiplatform-dsl-reference.md#targets).
-You also get advantages of native programming, including great performance and full access to platform SDKs.
-
-Kotlin provides the following code sharing mechanisms:
-
-* Share common code among [all platforms](multiplatform-share-on-platforms.md#share-code-on-all-platforms) used in your project.
-* Share code among [some platforms](multiplatform-share-on-platforms.md#share-code-on-similar-platforms) included in your project to reuse much of the code in similar platforms:
-
-  ![Code shared across different platforms](kotlin-multiplatform-hierarchical-structure.svg){width=700}
-
-* If you need to access platform-specific APIs from the shared code, use the Kotlin mechanism of [expected and actual
-  declarations](multiplatform-expect-actual.md).
-
-## Get started
-
-* Begin with the [Get started with Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html) if you want to create iOS and Android applications with shared code
-* Explore [sharing code principles and examples](multiplatform-share-on-platforms.md) if you want to create applications or libraries targeting other platforms
-
-> New to Kotlin? Take a look at [Getting started with Kotlin](getting-started.md).
->
-{type="tip"}
-
-### Sample projects
-
-Look through [cross-platform application samples](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-samples.html) to understand how Kotlin Multiplatform works.
-
+* [DSL reference for the Kotlin Multiplatform Gradle plugin](multiplatform-dsl-reference.md)
+* [Compatibility guide for Kotlin Multiplatform](multiplatform-compatibility-guide.md)
