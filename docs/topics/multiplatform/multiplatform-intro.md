@@ -86,7 +86,7 @@ build types. Kotlin also provides a way to build universal (fat) frameworks and 
 
 For more details on this topic, see [Build native binaries](multiplatform-build-native-binaries.md).
 
-## Multiplatform libraries
+## Create multiplatform libraries
 
 You can create a multiplatform library with common code and its platform-specific implementations for JVM, web, and
 native platforms.
