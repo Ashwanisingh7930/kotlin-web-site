@@ -241,9 +241,9 @@ To opt in to multiple APIs on the module level, add one of the described argumen
 ### Opt in to inherit from a class or interface
 
 Sometimes, a library author provides an API but wants to require users to explicitly opt in before they can extend it. 
-For example, to inherit from the API or add an implementation for an abstract function. Library authors can enforce this
-by marking [open](inheritance.md) or [abstract classes](classes.md#abstract-classes) and [non-functional interfaces](interfaces.md) with the [`@SubclassOptInRequired`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-subclass-opt-in-required/)
-annotation.
+For example, the library API may be stable for use but not for inheritance, as it might be extended in the future with 
+new abstract functions. Library authors can enforce this by marking [open](inheritance.md) or [abstract classes](classes.md#abstract-classes) and [non-functional interfaces](interfaces.md)
+with the [`@SubclassOptInRequired`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-subclass-opt-in-required/) annotation.
 
 To opt in to use such an API element and extend it in your code, use the `@SubclassOptInRequired` annotation
 with a reference to the annotation class. For example, suppose you want to use the `CoreLibraryApi` interface, which 
